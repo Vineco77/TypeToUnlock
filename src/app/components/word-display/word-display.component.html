@@ -1,0 +1,24 @@
+<div class="word-display-container">
+    <div class="progress-bar">
+      <div class="progress" [style.width.%]="textService.getProgress()"></div>
+    </div>
+    
+    <div class="progress-text">
+      {{ textService.getCompletedWords() }} / {{ textService.getTotalWords() }} palavras
+    </div>
+    
+    <div class="current-word">
+      {{ textService.getCurrentWord() }}
+    </div>
+    
+    <div class="typing-area" [ngClass]="{'error': showError}">
+      <input 
+        type="text" 
+        [(ngModel)]="typedWord" 
+        (keypress)="onKeyPress($event)"
+        placeholder="Digite a palavra acima e pressione Enter" 
+        autofocus>
+    </div>
+    
+    <button class="reset-button" (click)="textService.reset()">Reiniciar</button>
+  </div>

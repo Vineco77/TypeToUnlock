@@ -1,0 +1,15 @@
+<div class="text-input-container">
+    <h2>Insira o texto para o desafio</h2>
+    <p class="instruction">Digite o texto que será usado como desafio de digitação:</p>
+    
+    <form (ngSubmit)="submitText()">
+      <textarea 
+        [(ngModel)]="inputText" 
+        name="inputText" 
+        rows="6" 
+        placeholder="Digite ou cole seu texto aqui..."
+        required></textarea>
+      
+      <button type="submit" [disabled]="!inputText.trim()">Começar Desafio</button>
+    </form>
+  </div>
