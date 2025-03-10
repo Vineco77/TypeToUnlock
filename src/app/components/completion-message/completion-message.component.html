@@ -1,7 +1,4 @@
-<div class="completion-container">
-    <div class="completion-icon">✓</div>
-    <h2>Parabéns!</h2>
-    <p>Você concluiu o desafio com sucesso!</p>
-    <p class="stats">{{ textService.getTotalWords() }} palavras digitadas corretamente.</p>
-    <button (click)="textService.reset()">Iniciar Novo Desafio</button>
-  </div>
+<div class="completion-message" *ngIf="textService.isCompleted">
+  <h2>Parabéns!</h2>
+  <p>Você completou o desafio de digitação com sucesso.</p>
+</div>
