@@ -16,20 +16,16 @@ export class WordDisplayComponent {
   
   constructor(public textService: TextProcessingService) { }
   
-  // Verifica a palavra quando o usuário pressiona Enter
   checkWord() {
     if (this.typedWord.trim()) {
       const isCorrect = this.textService.checkWord(this.typedWord);
       
       if (isCorrect) {
-        // Limpa o campo se estiver correto
         this.typedWord = '';
         this.showError = false;
       } else {
-        // Mostra o erro visual
         this.showError = true;
         
-        // Remove o erro visual após 1 segundo
         setTimeout(() => {
           this.showError = false;
         }, 1000);
@@ -37,9 +33,8 @@ export class WordDisplayComponent {
     }
   }
   
-  // Método para capturar o evento de teclado (Enter)
   onKeyPress(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Spacebar' || event.key === ' ') {
       event.preventDefault();
       this.checkWord();
     }
