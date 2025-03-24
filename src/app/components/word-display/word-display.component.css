@@ -36,6 +36,7 @@
   
   .typing-area {
     margin-bottom: 20px;
+    width: 90%;
   }
   
   .typing-area input {

@@ -24,7 +24,6 @@ export class AppComponent {
   
   constructor(public textService: TextProcessingService) {}
   
-  // Método para iniciar o desafio de digitação
   startTypingChallenge(text: string) {
     this.textService.startProcessing(text);
   }
