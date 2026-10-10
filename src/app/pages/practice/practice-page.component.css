@@ -70,7 +70,7 @@ kbd {
   border-radius: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .slot {
@@ -82,10 +82,10 @@ kbd {
   border-bottom: 3px solid var(--border);
   color: var(--text);
   transition:
-    color 0.18s ease,
-    border-color 0.18s ease,
-    opacity 0.18s ease,
-    transform 0.18s ease;
+    color 0.5s ease,
+    border-color 0.5s ease,
+    opacity 0.5s ease,
+    transform 0.5s ease;
 }
 
 .slot-blank {
@@ -96,7 +96,7 @@ kbd {
 .slot-preview {
   border-bottom-color: var(--revealed);
   color: var(--revealed);
-  animation: preview-in 0.2s ease both;
+  animation: preview-in 0.5s ease both;
 }
 
 .word-slots.slots-revealed {
@@ -166,7 +166,12 @@ kbd {
   padding: 10px 20px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition:
+    background 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease,
+    filter 0.5s ease,
+    transform 0.5s ease;
 }
 
 .listen-button:hover {

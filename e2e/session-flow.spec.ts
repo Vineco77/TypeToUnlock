@@ -11,7 +11,7 @@ async function expectWord(page: Page, index: number): Promise<void> {
   const slots = page.getByTestId('word-slots');
   await expect(slots).toHaveAttribute('data-word-index', String(index));
   // Typed characters (blanks/reveal-preview excluded) are cleared only when
-  // the engine for the next word actually starts (650ms after a correct word).
+  // the engine for the next word actually starts (300ms after a correct word).
   await expect(
     slots.locator('[data-char-status="correct"], [data-char-status="wrong"]'),
   ).toHaveCount(0);

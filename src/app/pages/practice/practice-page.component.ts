@@ -32,6 +32,7 @@ import { TypingEngine, TypingState } from '../../typing/typing.engine';
 export class PracticePageComponent implements OnInit, OnDestroy {
   private engine: TypingEngine | null = null;
   private readonly destroy$ = new Subject<void>();
+  private advanceTimer: ReturnType<typeof setTimeout> | null = null;
   private revealShortcutHeld = false;
   readonly isBrowser: boolean;
 
@@ -66,6 +67,7 @@ export class PracticePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.clearAdvanceTimer();
     this.tts.cancel();
     this.destroy$.next();
     this.destroy$.complete();
@@ -146,8 +148,16 @@ export class PracticePageComponent implements OnInit, OnDestroy {
     if (this.state.status === 'correct') {
       this.hintUsed = false;
       this.session.markCorrect();
-      this.advance();
+      this.scheduleAdvance();
     }
+  }
+
+  private scheduleAdvance(): void {
+    this.clearAdvanceTimer();
+    this.advanceTimer = setTimeout(() => {
+      this.advanceTimer = null;
+      this.advance();
+    }, 100);
   }
 
   private advance(): void {
@@ -169,6 +179,13 @@ export class PracticePageComponent implements OnInit, OnDestroy {
     this.state = this.engine.state();
     this.revealShortcutHeld = false;
     this.hintUsed = false;
+  }
+
+  private clearAdvanceTimer(): void {
+    if (this.advanceTimer) {
+      clearTimeout(this.advanceTimer);
+      this.advanceTimer = null;
+    }
   }
 
   get sentenceNumber(): number {
