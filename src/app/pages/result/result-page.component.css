@@ -105,6 +105,16 @@
   cursor: pointer;
   border-radius: 6px;
   padding: 2px 4px;
+  transition: background-color 0.2s ease, transform 0.12s ease;
+}
+
+.word:hover {
+  background: var(--surface-2);
+}
+
+.word:active {
+  background: var(--border);
+  transform: scale(0.98);
 }
 
 .ipa {

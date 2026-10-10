@@ -19,8 +19,8 @@ import { TypingEngine, TypingState } from '../../typing/typing.engine';
  * The target word is never displayed: the only hints are the audio
  * (Ctrl+. replays the sentence, restarting it when already playing), the
  * number of characters rendered as "bottom lines", and the per-character
- * correct/wrong feedback. Ctrl+; reveals the current word (amber) and
- * counts as a hint.
+ * correct/wrong feedback. Ctrl+; reveals the current word (amber) while the
+ * shortcut is held and counts as a hint.
  */
 @Component({
   selector: 'app-practice-page',
@@ -32,7 +32,7 @@ import { TypingEngine, TypingState } from '../../typing/typing.engine';
 export class PracticePageComponent implements OnInit, OnDestroy {
   private engine: TypingEngine | null = null;
   private readonly destroy$ = new Subject<void>();
-  private advanceTimer: ReturnType<typeof setTimeout> | null = null;
+  private revealShortcutHeld = false;
   readonly isBrowser: boolean;
 
   state: TypingState | null = null;
@@ -66,13 +66,12 @@ export class PracticePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.clearAdvanceTimer();
     this.tts.cancel();
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  /** Global shortcuts: Ctrl+. replay, Ctrl+; reveal. */
+  /** Global shortcuts: Ctrl+. replay, Ctrl+; reveal while held. */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
     if (event.ctrlKey && (event.key === '.' || event.key === 'Period')) {
@@ -89,8 +88,11 @@ export class PracticePageComponent implements OnInit, OnDestroy {
       if (!this.engine || this.engine.isFinished) {
         return;
       }
-      this.state = this.engine.reveal();
-      this.session.markRevealed(); // counts as a hint, no advance (R3.8)
+      if (!this.revealShortcutHeld && !event.repeat) {
+        this.revealShortcutHeld = true;
+        this.state = this.engine.reveal();
+        this.session.markRevealed(); // counts as a hint, no advance (R3.8)
+      }
       return;
     }
     if (!this.engine) {
@@ -108,21 +110,26 @@ export class PracticePageComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.engine.isFinished) {
-      // The word is done and we are waiting to advance: fast-forward so the
-      // next keystroke is not lost (fast typists would drop characters).
-      if (this.advanceTimer) {
-        event.preventDefault();
-        this.clearAdvanceTimer();
-        const char = event.key;
-        this.advance();
-        if (this.engine && !this.engine.isFinished) {
-          this.handleTypedChar(char);
-        }
-      }
       return;
     }
     event.preventDefault();
     this.handleTypedChar(event.key);
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  onKeyup(event: KeyboardEvent): void {
+    if (
+      !this.revealShortcutHeld ||
+      (event.key !== ';' &&
+        event.key !== 'Semicolon' &&
+        event.key !== 'Control')
+    ) {
+      return;
+    }
+    this.revealShortcutHeld = false;
+    if (this.engine && !this.engine.isFinished) {
+      this.state = this.engine.hideReveal();
+    }
   }
 
   private handleTypedChar(char: string): void {
@@ -139,17 +146,11 @@ export class PracticePageComponent implements OnInit, OnDestroy {
     if (this.state.status === 'correct') {
       this.hintUsed = false;
       this.session.markCorrect();
-      this.scheduleAdvance();
+      this.advance();
     }
   }
 
-  private scheduleAdvance(): void {
-    this.clearAdvanceTimer();
-    this.advanceTimer = setTimeout(() => this.advance(), 650);
-  }
-
   private advance(): void {
-    this.advanceTimer = null;
     if (this.session.isCurrentSentenceComplete()) {
       this.tts.cancel();
       this.router.navigate(['/result']);
@@ -166,13 +167,8 @@ export class PracticePageComponent implements OnInit, OnDestroy {
     }
     this.engine = new TypingEngine(sentence.words[index].base);
     this.state = this.engine.state();
+    this.revealShortcutHeld = false;
     this.hintUsed = false;
-  }
-  private clearAdvanceTimer(): void {
-    if (this.advanceTimer) {
-      clearTimeout(this.advanceTimer);
-      this.advanceTimer = null;
-    }
   }
 
   get sentenceNumber(): number {

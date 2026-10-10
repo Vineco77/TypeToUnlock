@@ -105,6 +105,20 @@ describe('TypingEngine', () => {
     expect(state.chars.length).toBe(0);
   });
 
+  it('hides the reveal preview without changing typed character statuses', () => {
+    const engine = new TypingEngine('with');
+    engine.type('w');
+    engine.reveal();
+    engine.type('x');
+    expect(engine.state().chars[0].status).toBe('correct');
+    expect(engine.state().chars[1].status).toBe('wrong');
+    expect(engine.hideReveal().preview).toBeNull();
+    expect(engine.state().chars.map((c) => c.status)).toEqual([
+      'correct',
+      'wrong',
+    ]);
+  });
+
   it('preview disappears once the word is complete', () => {
     const engine = new TypingEngine('with');
     engine.reveal();

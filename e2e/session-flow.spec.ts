@@ -141,27 +141,34 @@ test('Ctrl+. restarts the sentence audio (CA2.1)', async ({ page }) => {
   expect(afterTwo.cancels).toBeGreaterThanOrEqual(2);
 });
 
-test('Ctrl+; shows the answer but the user still types it (CA3.5)', async ({
+test('Ctrl+; shows the answer only while held and preserves typed colors (CA3.5)', async ({
   page,
 }) => {
   await stubSpeech(page);
   await mockDictionary(page);
   await startSession(page, 'We go home.');
 
-  await page.keyboard.press('Control+Semicolon');
+  await page.keyboard.down('Control');
+  await page.keyboard.down('Semicolon');
   await expect(page.getByTestId('feedback-revealed')).toBeVisible();
   // No advance: still on word 0, with the ghost preview "we".
   await expectWord(page, 0);
   const slots = page.getByTestId('word-slots');
   await expect(slots.locator('.slot-preview')).toHaveText(['w', 'e']);
+  await page.keyboard.up('Semicolon');
+  await expect(page.getByTestId('feedback-revealed')).toBeHidden();
+  await page.keyboard.up('Control');
 
   // Only typing the word correctly advances.
   await page.keyboard.type('we');
   await expectWord(page, 1);
 
   // Reveal on another word: preview shrinks as the user types.
-  await page.keyboard.press('Control+Semicolon');
+  await page.keyboard.down('Control');
+  await page.keyboard.down('Semicolon');
   await expect(slots.locator('.slot-preview')).toHaveText(['g', 'o']);
+  await page.keyboard.up('Semicolon');
+  await page.keyboard.up('Control');
   await page.keyboard.type('go');
   await expectWord(page, 2);
 
@@ -170,6 +177,33 @@ test('Ctrl+; shows the answer but the user still types it (CA3.5)', async ({
   await page.getByTestId('result-next').click();
   await page.waitForURL('**/summary');
   await expect(page.getByTestId('stat-reveals')).toHaveText('2');
+});
+
+test('Ctrl+; keeps correct and wrong prefix colors while revealing the remainder', async ({
+  page,
+}) => {
+  await stubSpeech(page);
+  await mockDictionary(page);
+  await startSession(page, 'with go.');
+
+  await page.keyboard.type('wx');
+  const slots = page.getByTestId('word-slots');
+  await page.keyboard.down('Control');
+  await page.keyboard.down('Semicolon');
+
+  await expect(slots.locator('.slot').nth(0)).toHaveAttribute(
+    'data-char-status',
+    'correct',
+  );
+  await expect(slots.locator('.slot').nth(1)).toHaveAttribute(
+    'data-char-status',
+    'wrong',
+  );
+  await expect(slots.locator('.slot-preview')).toHaveText(['t', 'h']);
+
+  await page.keyboard.up('Semicolon');
+  await page.keyboard.up('Control');
+  await expect(slots.locator('.slot-preview')).toHaveCount(0);
 });
 
 test('direct /practice without session redirects home (CA1.3)', async ({

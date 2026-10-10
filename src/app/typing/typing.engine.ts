@@ -43,8 +43,8 @@ export class TypingEngine {
   private target = '';
   private typed = '';
   private currentStatus: TypingStatus = 'typing';
-  /** Ctrl+; pressed on the current word: shows the answer but the user
-   * still has to type the word before it advances (R3.8). */
+  /** Ctrl+; is held on the current word: shows the answer while held, but
+   * the user still has to type the word before it advances (R3.8). */
   private revealed = false;
 
   constructor(target: string) {
@@ -93,13 +93,19 @@ export class TypingEngine {
     return this.state();
   }
 
-  /** Ctrl+; hint: shows the answer but does NOT finish the word —
-   * the user still has to type it (R3.8). */
+  /** Ctrl+; hint: shows the answer until it is released, but does NOT finish
+   * the word — the user still has to type it (R3.8). */
   reveal(): TypingState {
     if (this.isFinished) {
       return this.state();
     }
     this.revealed = true;
+    return this.state();
+  }
+
+  /** Hides the transient Ctrl+; preview without changing typed characters. */
+  hideReveal(): TypingState {
+    this.revealed = false;
     return this.state();
   }
 

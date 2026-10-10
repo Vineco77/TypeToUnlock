@@ -26,11 +26,12 @@ o texto; a única pista é o áudio, o tamanho da palavra e o feedback visual de
 - **R3.6** A correção reavalia a cada tecla: ao corrigir para o valor exato, fica
   verde e avança.
 - **R3.7** `Ctrl+.` toca/reinicia o áudio da frase inteira (spec-02).
-- **R3.8** `Ctrl+;` **exibe a resposta da palavra atual** — os caracteres ainda não
-  digitados aparecem como "ghost text" (âmbar) e o word slots ficam com borda âmbar.
-  **Não avança automaticamente**: o usuário continua precisando digitar a palavra
-  corretamente para avançar (verde → próximo). Cada uso é contabilizado como hint
-  nas stats.
+- **R3.8** Enquanto `Ctrl+;` estiver pressionado, **exibe a resposta da palavra
+  atual** — os caracteres ainda não digitados aparecem como "ghost text" (âmbar)
+  e o word slots ficam com borda âmbar. Ao soltar qualquer uma das teclas, o
+  preview desaparece. **Não avança automaticamente**: o usuário continua
+  precisando digitar a palavra corretamente para avançar (verde → próximo).
+  Cada pressionamento é contabilizado como hint nas stats.
 - **R3.9** Barra de progresso por frase (palavras concluídas/total).
 - **R3.10** Ao concluir todas as palavras da frase, a sessão avança para `/result`
   (spec-05) automaticamente.
@@ -45,9 +46,12 @@ o texto; a única pista é o áudio, o tamanho da palavra e o feedback visual de
   (pontuação ignorada na comparação).
 - **CA3.4** Nenhum momento a palavra-alvo aparece no DOM da página de prática
   (verificação E2E por `page.content()`).
-- **CA3.5** `Ctrl+;` na primeira palavra mostra o preview âmbar e **continua na mesma
-  palavra** (índice não muda); digitar a palavra corretamente avança para a próxima.
-  Dois `Ctrl+;` + digitação correta incrementam "hints used" para 2 no resumo.
+- **CA3.5** Enquanto `Ctrl+;` estiver pressionado na primeira palavra, mostra o
+  preview âmbar e **continua na mesma palavra** (índice não muda); ao soltar as
+  teclas, o preview desaparece. A parte já digitada mantém suas cores: correta
+  em verde e divergente em vermelho. Digitar a palavra corretamente avança para
+  a próxima. Dois pressionamentos de `Ctrl+;` + digitação correta incrementam
+  "hints used" para 2 no resumo.
 - **CA3.6** Tecla extra além do comprimento do alvo é ignorada (não insere caractere).
 
 ## Dependências

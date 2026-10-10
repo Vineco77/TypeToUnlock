@@ -70,6 +70,7 @@ kbd {
   border-radius: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .slot {
@@ -80,7 +81,11 @@ kbd {
   text-align: center;
   border-bottom: 3px solid var(--border);
   color: var(--text);
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease,
+    transform 0.18s ease;
 }
 
 .slot-blank {
@@ -91,14 +96,17 @@ kbd {
 .slot-preview {
   border-bottom-color: var(--revealed);
   color: var(--revealed);
+  animation: preview-in 0.2s ease both;
 }
 
 .word-slots.slots-revealed {
   border-color: var(--revealed);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--revealed) 14%, transparent);
 }
 
 .slot-correct {
   border-bottom-color: var(--correct);
+  color: var(--correct);
 }
 
 .slot-wrong {
@@ -115,11 +123,6 @@ kbd {
   color: var(--correct);
 }
 
-.word-slots.slots-revealed .slot {
-  border-bottom-color: var(--revealed);
-  color: var(--revealed);
-}
-
 .feedback {
   margin: 0;
   font-size: 0.95rem;
@@ -131,6 +134,28 @@ kbd {
 
 .feedback-revealed {
   color: var(--revealed);
+}
+
+@keyframes preview-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-slots,
+  .slot {
+    transition: none;
+  }
+
+  .slot-preview {
+    animation: none;
+  }
 }
 
 .listen-button {
