@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global theme — dark UI inspired by the reference print. */
+:root {
+  --bg: #101014;
+  --surface: #17171d;
+  --surface-2: #22222a;
+  --border: #2e2e38;
+  --text: #f2f2f5;
+  --muted: #9a9aa5;
+  --accent: #6c5ce7;
+  --correct: #2ecc71;
+  --wrong: #e74c3c;
+  --revealed: #e1a93b;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--accent);
+}

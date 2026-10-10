@@ -1,59 +1,69 @@
 # TypeToUnlock
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.1.
+Practice English **listening + writing**: paste an English text, hear each
+sentence and type it word by word — the only hints are the audio, the word
+length ("bottom lines") and the per-character feedback. At the end of each
+sentence, see its full grammatical analysis with meanings and pronunciation.
 
-## Development server
+## How it works
 
-To start a local development server, run:
+1. **`/`** — paste an English text (it is split into sentences).
+2. **`/practice`** — listen to the sentence (plays automatically once) and type
+   each word without seeing it:
+   - correct word → **green** and you automatically advance;
+   - wrong word → the **divergent characters turn red** and the input locks
+     until you fix the same word;
+   - `Ctrl+.` → replay the sentence (restarts it if already playing);
+   - `Ctrl+;` → reveal the current word (amber, counted as a hint).
+3. **`/result`** — the full sentence as grammatical chunks (Subject, Verb,
+   Phrasal verb, Prepositional phrase, Object, ...), IPA above each word, POS
+   below it. Select one or more words with the mouse to open a popup with the
+   **meaning** and listen to **only that selection**.
+4. **`/summary`** — session stats with per-sentence review links.
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Development setup
 
 ```bash
-ng build
+npm install
+
+# API server (port 3000) + Angular dev server (port 4200, /api proxied)
+npm run dev
+# or separately:
+npm run dev:server   # Node API
+npm start            # ng serve with /api proxy
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Open http://localhost:4200.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Tests
 
 ```bash
-ng test
+# Unit tests (frontend, Karma/Jasmine — 34 specs)
+npm test
+
+# Unit tests (server, node:test — 12 specs)
+npm run test:server
+
+# E2E (Playwright — 13 tests, boots both servers automatically)
+npx playwright install chromium   # first time only
+npm run e2e
+
+# Everything at once
+npm run test:all
 ```
 
-## Running end-to-end tests
+E2E and server tests are fully deterministic: `speechSynthesis` is stubbed and
+dictionary responses come from fixtures (no external network in tests).
 
-For end-to-end (e2e) testing, run:
+## Free stack (no API keys, no costs)
 
-```bash
-ng e2e
-```
+| Need | Solution |
+|---|---|
+| Audio (sentence/word/selection) | **Web Speech API** (`speechSynthesis`) behind a `TtsService` adapter |
+| POS tagging / chunks | **compromise** (MIT) + heuristic chunker on `server/` |
+| Meanings + IPA | **freedictionaryapi.com** with **Wiktionary REST** fallback, cached 24h |
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Specs
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Each delivery of this experience is documented in [`specs/`](./specs/README.md)
+with goal, scope, requirements, acceptance criteria, dependencies and tests.

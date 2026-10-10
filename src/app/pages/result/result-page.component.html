@@ -1,0 +1,100 @@
+<div class="result-container" data-testid="result-page">
+  <header class="result-header">
+    <h1>Sentence analysis</h1>
+    <p class="sentence-counter">
+      Sentence {{ (session.session()?.currentSentence ?? 0) + 1 }} of
+      {{ session.totalSentences() }}
+    </p>
+  </header>
+
+  @if (loading) {
+    <p class="status" data-testid="result-loading">Analyzing the sentence...</p>
+  } @else if (loadError) {
+    <p class="status status-error" data-testid="result-error">{{ loadError }}</p>
+  } @else if (analysis) {
+    <div
+      #sentenceArea
+      class="sentence-area"
+      data-sentence-area
+      data-testid="sentence-area"
+      (mouseup)="onMouseUp()"
+    >
+      @for (chunk of analysis.chunks; track $index) {
+        <div class="chunk" [ngClass]="chunkClass(chunk)" data-testid="chunk">
+          <span class="chunk-badge">{{ chunk.label }}</span>
+          <div class="chunk-words">
+            @for (word of wordsOf(chunk); track word.index) {
+              <span class="word" [attr.data-word-index]="word.index">
+                <span class="ipa">{{ phonetics.get(word.index) ?? '' }}</span>
+                <span class="word-text">{{ word.text }}</span>
+                <span class="word-underline"></span>
+                <span class="pos" [attr.data-pos]="word.pos">{{ word.pos }}</span>
+              </span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="result-actions">
+      <button type="button" class="action-button" (click)="listen()" data-testid="result-listen">
+        &#128266; Listen
+      </button>
+      <button type="button" class="action-primary" (click)="next()" data-testid="result-next">
+        {{ session.isLastSentence() ? 'Finish' : 'Next sentence' }}
+      </button>
+    </div>
+
+    @if (popup) {
+      <div
+        class="meaning-popup"
+        [style.top.px]="popup.top"
+        [style.left.px]="popup.left"
+        data-testid="meaning-popup"
+      >
+        <button
+          type="button"
+          class="popup-close"
+          (click)="closePopup()"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+
+        <h2 class="popup-term">{{ popup.term }}</h2>
+        @if (popupEntry?.phonetic) {
+          <p class="popup-ipa">{{ popupEntry?.phonetic }}</p>
+        }
+
+        <button
+          type="button"
+          class="popup-listen"
+          (click)="playSelection()"
+          data-testid="popup-listen"
+        >
+          &#128266; Listen to the selection
+        </button>
+
+        @if (popupLoading) {
+          <p class="popup-status" data-testid="popup-loading">Loading meaning...</p>
+        } @else if (popupFailed) {
+          <p class="popup-status" data-testid="popup-failed">Meaning not available.</p>
+        } @else if (popupEntry) {
+          @if (popupEntry.partOfSpeech) {
+            <p class="popup-pos">{{ popupEntry.partOfSpeech }}</p>
+          }
+          <ol class="popup-definitions" data-testid="popup-definitions">
+            @for (definition of popupEntry.definitions.slice(0, 4); track $index) {
+              <li>
+                {{ definition.text }}
+                @if (definition.example) {
+                  <em class="popup-example">"{{ definition.example }}"</em>
+                }
+              </li>
+            }
+          </ol>
+        }
+      </div>
+    }
+  }
+</div>

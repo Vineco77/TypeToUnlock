@@ -1,0 +1,68 @@
+<div class="practice-container" data-testid="practice-page">
+  <header class="practice-header">
+    <h1>Type To Unlock</h1>
+    <p class="sentence-counter" data-testid="sentence-counter">
+      Sentence {{ sentenceNumber }} of {{ totalSentences }}
+    </p>
+    <div class="progress-bar" aria-hidden="true">
+      <div class="progress" [style.width.%]="progressPercent"></div>
+    </div>
+  </header>
+
+  <main class="challenge">
+    <p class="hint" data-testid="audio-hint">
+      Listen to the sentence and type each word.
+      <kbd>Ctrl</kbd>+<kbd>.</kbd> replays it &middot; <kbd>Ctrl</kbd>+<kbd>;</kbd> shows the answer (you still need to type it).
+    </p>
+
+    <div
+      class="word-slots"
+      [class.slots-wrong]="state?.status === 'wrong'"
+      [class.slots-correct]="state?.status === 'correct'"
+      [class.slots-revealed]="state?.preview !== null && state?.preview !== undefined"
+      [attr.data-word-index]="currentWordIndex"
+      data-testid="word-slots"
+    >
+      @for (slot of state?.chars ?? []; track $index) {
+        <span
+          class="slot"
+          [class.slot-correct]="slot.status === 'correct'"
+          [class.slot-wrong]="slot.status === 'wrong'"
+          [attr.data-char-status]="slot.status"
+          >{{ slot.char }}</span
+        >
+      }
+      @for (char of state?.preview ?? []; track $index) {
+        <span class="slot slot-preview" [attr.data-char-status]="'preview'">{{ char }}</span>
+      }
+      @if (!(state?.preview)) {
+        @for (i of blankSlots(); track i) {
+          <span class="slot slot-blank">&nbsp;</span>
+        }
+      }
+    </div>
+
+    @if (state?.status === 'wrong') {
+      <p class="feedback feedback-wrong" data-testid="feedback-wrong">
+        Not quite &mdash; fix the red characters and keep going.
+      </p>
+    } @else if (state?.preview) {
+      <p class="feedback feedback-revealed" data-testid="feedback-revealed">
+        Answer shown &mdash; type it to continue.
+      </p>
+    }
+
+    <button
+      type="button"
+      class="listen-button"
+      (click)="onReplay()"
+      data-testid="replay-button"
+    >
+      &#128266; Listen (Ctrl+.)
+    </button>
+  </main>
+
+  <footer class="practice-footer">
+    <a routerLink="/" class="exit-link" (click)="session.clear()">Start over</a>
+  </footer>
+</div>

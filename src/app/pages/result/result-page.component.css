@@ -1,0 +1,243 @@
+.result-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 16px 96px;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.result-header h1 {
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+  margin: 0 0 8px;
+}
+
+.sentence-counter {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.status {
+  text-align: center;
+  color: var(--muted);
+}
+
+.status-error {
+  color: var(--wrong);
+}
+
+.sentence-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: stretch;
+  user-select: text;
+}
+
+.chunk {
+  position: relative;
+  border: 1.5px solid var(--chunk-color, var(--border));
+  border-radius: 20px;
+  padding: 24px 20px 16px;
+  margin-top: 14px;
+  background: var(--surface);
+}
+
+.chunk-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--chunk-color, var(--accent));
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.chunk-subject {
+  --chunk-color: #b98a3b;
+}
+
+.chunk-verb {
+  --chunk-color: #c96a86;
+}
+
+.chunk-phrasal-verb {
+  --chunk-color: #c96a86;
+}
+
+.chunk-prepositional-phrase {
+  --chunk-color: #5b93a8;
+}
+
+.chunk-object {
+  --chunk-color: #7d6bb5;
+}
+
+.chunk-adverbial-phrase {
+  --chunk-color: #58a06b;
+}
+
+.chunk-conjunction {
+  --chunk-color: #8a8f98;
+}
+
+.chunk-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+
+.ipa {
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-height: 1.1em;
+}
+
+.word-text {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.word-underline {
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--word-color, var(--accent));
+}
+
+.pos {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* POS-based underline colors (spec-05 print reference). */
+.word:has(.pos[data-pos='verb']) .word-underline {
+  --word-color: #d99a3d;
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.action-button,
+.action-primary {
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.action-button {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.action-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ------------------------------- popup ------------------------------- */
+
+.meaning-popup {
+  position: absolute;
+  z-index: 20;
+  max-width: 340px;
+  min-width: 260px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.popup-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.popup-term {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.popup-ipa {
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+}
+
+.popup-listen {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.popup-status {
+  color: var(--muted);
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+}
+
+.popup-pos {
+  color: var(--accent);
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  margin: 8px 0 4px;
+}
+
+.popup-definitions {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.popup-definitions li {
+  margin-bottom: 6px;
+}
+
+.popup-example {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}

@@ -1,0 +1,28 @@
+<div class="home-container" data-testid="home-page">
+  <h1>Type To Unlock</h1>
+  <p class="tagline">
+    Practice English listening and writing: you will <strong>hear</strong> each sentence
+    and type it word by word.
+  </p>
+
+  <form (ngSubmit)="submitText()">
+    <label for="input-text">English text to practice</label>
+    <textarea
+      id="input-text"
+      [(ngModel)]="inputText"
+      name="inputText"
+      rows="6"
+      placeholder="Paste an English text or sentence here..."
+      required
+      data-testid="home-textarea"
+    ></textarea>
+
+    @if (error) {
+      <p class="error" data-testid="home-error">{{ error }}</p>
+    }
+
+    <button type="submit" [disabled]="!inputText.trim()" data-testid="home-submit">
+      Start challenge
+    </button>
+  </form>
+</div>

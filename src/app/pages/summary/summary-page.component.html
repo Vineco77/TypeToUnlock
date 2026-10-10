@@ -1,0 +1,40 @@
+<div class="summary-container" data-testid="summary-page">
+  <h1>Session complete!</h1>
+  <p class="subtitle">
+    You practiced {{ sentences.length }} sentence(s) and {{ totalWords }} word(s).
+  </p>
+
+  <ul class="summary-stats">
+    <li>
+      <span class="stat-value" data-testid="stat-errors">{{
+        session.session()?.totalErrors ?? 0
+      }}</span>
+      <span class="stat-label">errors</span>
+    </li>
+    <li>
+      <span class="stat-value" data-testid="stat-reveals">{{
+        session.session()?.totalReveals ?? 0
+      }}</span>
+      <span class="stat-label">hints used</span>
+    </li>
+  </ul>
+
+  <ul class="sentence-list">
+    @for (sentence of sentences; track $index) {
+      <li>
+        <p class="sentence-text">{{ sentence.text }}</p>
+        <p class="sentence-meta">
+          {{ sentence.words.length }} words &middot; {{ sentence.errorCount }} errors &middot;
+          {{ sentence.revealCount }} hints
+        </p>
+        <button type="button" class="review-button" (click)="review($index)">
+          Review analysis
+        </button>
+      </li>
+    }
+  </ul>
+
+  <button type="button" class="start-over" (click)="startOver()" data-testid="summary-restart">
+    Start a new challenge
+  </button>
+</div>
