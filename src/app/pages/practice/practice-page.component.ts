@@ -4,6 +4,7 @@ import {
   Inject,
   OnDestroy,
   OnInit,
+  AfterViewInit,
   PLATFORM_ID,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -29,7 +30,7 @@ import { TypingEngine, TypingState } from '../../typing/typing.engine';
   templateUrl: './practice-page.component.html',
   styleUrl: './practice-page.component.css',
 })
-export class PracticePageComponent implements OnInit, OnDestroy {
+export class PracticePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private engine: TypingEngine | null = null;
   private readonly destroy$ = new Subject<void>();
   private advanceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -59,11 +60,12 @@ export class PracticePageComponent implements OnInit, OnDestroy {
       return;
     }
     this.startCurrentWord();
-    // R3.11: play the sentence once when it starts.
-    const sentence = this.session.currentSentence();
-    if (sentence) {
-      this.tts.speak(sentence.text);
-    }
+  }
+
+  ngAfterViewInit(): void {
+    // R3.11: play the sentence once the view has rendered so playback starts
+    // from the beginning instead of mid-sentence.
+    this.startListening();
   }
 
   ngOnDestroy(): void {
@@ -71,6 +73,16 @@ export class PracticePageComponent implements OnInit, OnDestroy {
     this.tts.cancel();
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /** R3.11: play the current sentence once when it starts. Deferred until the
+   * view has rendered so the utterance is queued after the page is fully
+   * loaded, avoiding playback that starts mid-sentence. */
+  private startListening(): void {
+    const sentence = this.session.currentSentence();
+    if (sentence) {
+      this.tts.speak(sentence.text);
+    }
   }
 
   /** Global shortcuts: Ctrl+. replay, Ctrl+; reveal while held. */

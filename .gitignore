@@ -6,6 +6,9 @@
 /out-tsc
 /bazel-out
 
+# Agents
+.ori/*
+
 # Node
 /node_modules
 npm-debug.log
