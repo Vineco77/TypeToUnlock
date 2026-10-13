@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import {
+  Difficulty,
   SentenceSession,
   SessionState,
   SessionWord,
@@ -48,7 +49,7 @@ export class SessionService {
     return this.state() !== null;
   }
 
-  createSession(text: string): boolean {
+  createSession(text: string, difficulty: Difficulty = 'normal'): boolean {
     const sentences = this.splitter
       .splitIntoSentences(text)
       .map<SentenceSession>((sentence) => ({
@@ -69,9 +70,20 @@ export class SessionService {
       totalErrors: 0,
       totalReveals: 0,
       startedAt: Date.now(),
+      difficulty,
     });
     this.persist();
     return true;
+  }
+
+  /** Difficulty of the current session (spec-07); defaults to `normal`. */
+  difficulty(): Difficulty {
+    return this.state()?.difficulty ?? 'normal';
+  }
+
+  /** True when the session shows the sentence being practiced. */
+  isEasy(): boolean {
+    return this.difficulty() === 'easy';
   }
 
   currentSentence(): SentenceSession | null {
@@ -226,7 +238,8 @@ export class SessionService {
     try {
       const parsed = JSON.parse(raw) as SessionState;
       if (parsed?.sentences?.length) {
-        this.state.set(parsed);
+        // Sessions created before spec-07 have no difficulty: default normal.
+        this.state.set({ ...parsed, difficulty: parsed.difficulty ?? 'normal' });
       }
     } catch {
       window.sessionStorage.removeItem(STORAGE_KEY);

@@ -39,6 +39,9 @@ export class PracticePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   state: TypingState | null = null;
   hintUsed = false;
+  /** Easy mode: whether the practiced sentence is currently readable.
+   * Toggled with the eye button; reset to visible on each page load. */
+  easySentenceVisible = true;
 
   constructor(
     public readonly session: SessionService,
@@ -198,6 +201,31 @@ export class PracticePageComponent implements OnInit, AfterViewInit, OnDestroy {
       clearTimeout(this.advanceTimer);
       this.advanceTimer = null;
     }
+  }
+
+  /** True when the session runs on Easy difficulty (spec-07). */
+  get isEasy(): boolean {
+    return this.session.isEasy();
+  }
+
+  /** Label shown on the difficulty badge during the challenge. */
+  get difficultyLabel(): string {
+    return this.isEasy ? 'Easy' : 'Normal';
+  }
+
+  /** The sentence being practiced, shown below the slots on Easy. */
+  get currentSentenceText(): string {
+    return this.session.currentSentence()?.text ?? '';
+  }
+
+  /** Censored sentence: every non-space character becomes a bullet so the
+   * answer stays hidden while the eye toggle is off. */
+  get censoredSentence(): string {
+    return this.currentSentenceText.replace(/[^\s]/g, '\u2022');
+  }
+
+  toggleSentenceVisibility(): void {
+    this.easySentenceVisible = !this.easySentenceVisible;
   }
 
   get sentenceNumber(): number {

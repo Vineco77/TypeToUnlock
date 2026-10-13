@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/type-to-unlock/browser",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.csr.html"
+    }
+  ]
+}

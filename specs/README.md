@@ -14,6 +14,7 @@ gramatical completa (chunks + POS + IPA) com meanings e pronúncia sob demanda.
 | 04 | [spec-04-language-api.md](./spec-04-language-api.md) | Backend Node: análise gramatical + dicionário |
 | 05 | [spec-05-result-view.md](./spec-05-result-view.md) | Tela de resultado com estrutura gramatical |
 | 06 | [spec-06-testing.md](./spec-06-testing.md) | Infra de testes (Karma + Playwright) |
+| 07 | [spec-07-difficulty.md](./spec-07-difficulty.md) | Seletor de dificuldade (Normal/Easy) |
 
 ## Decisões arquiteturais (aprovadas)
 

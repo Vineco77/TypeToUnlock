@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "vercel-build": "npm run build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev": "concurrently -n web,api -c blue,green \"npm:start\" \"npm:dev:server\"",

@@ -85,10 +85,21 @@ export async function mockDictionary(
   });
 }
 
-/** Starts a session with the given text from the home page. */
-export async function startSession(page: Page, text: string): Promise<void> {
+/**
+ * Starts a session with the given text from the home page. Pass
+ * `difficulty: 'easy'` to pick the Easy level before submitting (spec-07);
+ * defaults to Normal, which is the app default.
+ */
+export async function startSession(
+  page: Page,
+  text: string,
+  difficulty: 'normal' | 'easy' = 'normal',
+): Promise<void> {
   await page.goto('/');
   await page.getByTestId('home-textarea').fill(text);
+  if (difficulty === 'easy') {
+    await page.getByTestId('difficulty-easy').click();
+  }
   await page.getByTestId('home-submit').click();
   await page.waitForURL('**/practice');
 }

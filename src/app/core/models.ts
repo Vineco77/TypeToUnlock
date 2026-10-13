@@ -53,6 +53,10 @@ export interface DictionaryEntry {
   source: 'freedictionaryapi' | 'wiktionary' | 'none';
 }
 
+/** Difficulty levels: `normal` is audio-only, `easy` also shows the
+ * sentence being practiced while the challenge runs. */
+export type Difficulty = 'normal' | 'easy';
+
 /** Session state for one word of a practice sentence. */
 export type WordStatus = 'pending' | 'correct' | 'revealed';
 
@@ -79,4 +83,6 @@ export interface SessionState {
   totalErrors: number;
   totalReveals: number;
   startedAt: number;
+  /** Chosen before starting; defaults to `normal` (spec-07). */
+  difficulty: Difficulty;
 }

@@ -1,4 +1,34 @@
 <div class="home-container" data-testid="home-page">
+  <div class="difficulty-row">
+    <div
+      class="difficulty-toggle"
+      role="group"
+      aria-label="Difficulty"
+      data-testid="difficulty-toggle"
+    >
+      <button
+        type="button"
+        class="difficulty-option"
+        [class.active]="difficulty === 'normal'"
+        [attr.aria-pressed]="difficulty === 'normal'"
+        (click)="setDifficulty('normal')"
+        data-testid="difficulty-normal"
+      >
+        Normal
+      </button>
+      <button
+        type="button"
+        class="difficulty-option"
+        [class.active]="difficulty === 'easy'"
+        [attr.aria-pressed]="difficulty === 'easy'"
+        (click)="setDifficulty('easy')"
+        data-testid="difficulty-easy"
+      >
+        Easy
+      </button>
+    </div>
+  </div>
+
   <h1>Type To Unlock</h1>
   <p class="tagline">
     Practice English listening and writing: you will <strong>hear</strong> each sentence

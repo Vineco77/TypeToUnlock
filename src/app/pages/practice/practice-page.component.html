@@ -1,5 +1,12 @@
 <div class="practice-container" data-testid="practice-page">
   <header class="practice-header">
+    <span
+      class="difficulty-badge"
+      [class.badge-easy]="isEasy"
+      data-testid="difficulty-badge"
+    >
+      {{ difficultyLabel }}
+    </span>
     <h1>Type To Unlock</h1>
     <p class="sentence-counter" data-testid="sentence-counter">
       Sentence {{ sentenceNumber }} of {{ totalSentences }}
@@ -61,6 +68,31 @@
       &#128266; Listen (Ctrl+.)
     </button>
   </main>
+
+  @if (isEasy) {
+    <section class="easy-panel" data-testid="easy-panel">
+      <div class="easy-panel-header">
+        <span class="easy-panel-label">Sentence being practiced</span>
+        <button
+          type="button"
+          class="visibility-toggle"
+          [attr.aria-pressed]="easySentenceVisible"
+          [attr.aria-label]="easySentenceVisible ? 'Hide the sentence' : 'Show the sentence'"
+          (click)="toggleSentenceVisibility()"
+          data-testid="sentence-visibility-toggle"
+        >
+          <span class="eye-icon" aria-hidden="true">{{ easySentenceVisible ? '👁' : '🙈' }}</span>
+        </button>
+      </div>
+      <p
+        class="easy-sentence"
+        [class.censored]="!easySentenceVisible"
+        data-testid="easy-sentence"
+      >
+        {{ easySentenceVisible ? currentSentenceText : censoredSentence }}
+      </p>
+    </section>
+  }
 
   <footer class="practice-footer">
     <a routerLink="/" class="exit-link" (click)="session.clear()">Start over</a>

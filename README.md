@@ -35,6 +35,21 @@ npm start            # ng serve with /api proxy
 
 Open http://localhost:4200.
 
+## Deploy na Vercel
+
+O projeto pode ser publicado como um único projeto Vercel:
+
+1. Importe o repositório na Vercel sem alterar o diretório raiz.
+2. Mantenha o comando de build como `npm run build` (já definido em
+   `vercel.json`).
+3. A saída do frontend será `dist/type-to-unlock/browser`.
+4. As rotas `/api/health`, `/api/analyze` e `/api/dictionary` serão executadas
+   como funções serverless a partir de `api/`.
+
+O frontend usa URLs relativas para `/api`, então não é necessário configurar
+uma URL de API ou CORS separado. O proxy em `proxy.conf.json` continua sendo
+usado somente pelo ambiente de desenvolvimento local.
+
 ## Tests
 
 ```bash

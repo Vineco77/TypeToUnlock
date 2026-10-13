@@ -5,6 +5,51 @@
   text-align: center;
 }
 
+.difficulty-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 24px;
+}
+
+.difficulty-toggle {
+  display: inline-flex;
+  padding: 4px;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.difficulty-option {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-family: inherit;
+  padding: 6px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.difficulty-option:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.difficulty-option:active {
+  background: var(--border);
+}
+
+.difficulty-option.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
 .home-container h1 {
   font-size: 2.25rem;
   letter-spacing: -0.04em;

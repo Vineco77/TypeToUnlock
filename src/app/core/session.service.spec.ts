@@ -27,6 +27,50 @@ describe('SessionService', () => {
     expect(service.session()?.currentSentence).toBe(0);
   });
 
+  it('defaults the difficulty to normal (spec-07)', () => {
+    service.createSession('One sentence.');
+    expect(service.difficulty()).toBe('normal');
+    expect(service.isEasy()).toBeFalse();
+  });
+
+  it('creates an easy session and persists the difficulty (spec-07)', () => {
+    expect(service.createSession('One sentence.', 'easy')).toBeTrue();
+    expect(service.isEasy()).toBeTrue();
+
+    const restored = new SessionService(
+      new SentenceSplitterService(),
+      'browser' as unknown as object,
+    );
+    expect(restored.difficulty()).toBe('easy');
+  });
+
+  it('restores legacy sessions without a difficulty as normal (spec-07)', () => {
+    const legacy = {
+      sentences: [
+        {
+          text: 'Legacy sentence.',
+          words: [{ text: 'Legacy', base: 'legacy', status: 'pending' }],
+          errorCount: 0,
+          revealCount: 0,
+        },
+      ],
+      currentSentence: 0,
+      totalErrors: 0,
+      totalReveals: 0,
+      startedAt: 0,
+    };
+    window.sessionStorage.setItem(
+      'type-to-unlock.session',
+      JSON.stringify(legacy),
+    );
+    const restored = new SessionService(
+      new SentenceSplitterService(),
+      'browser' as unknown as object,
+    );
+    expect(restored.difficulty()).toBe('normal');
+    expect(restored.isEasy()).toBeFalse();
+  });
+
   it('tokenizes words and strips punctuation from the base form (CA3.3)', () => {
     service.createSession('Hello, world!');
     const sentence = service.currentSentence()!;

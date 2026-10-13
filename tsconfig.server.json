@@ -6,6 +6,6 @@
     "module": "ES2022",
     "moduleResolution": "bundler"
   },
-  "include": ["server/**/*.ts", "src/app/core/models.ts"],
+  "include": ["api/**/*.ts", "server/**/*.ts", "src/app/core/models.ts"],
   "exclude": ["server/**/*.test.ts"]
 }
