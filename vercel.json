@@ -3,7 +3,7 @@
   "outputDirectory": "dist/type-to-unlock/browser",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.csr.html"
     }
   ]

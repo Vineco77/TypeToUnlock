@@ -50,6 +50,23 @@ O frontend usa URLs relativas para `/api`, então não é necessário configurar
 uma URL de API ou CORS separado. O proxy em `proxy.conf.json` continua sendo
 usado somente pelo ambiente de desenvolvimento local.
 
+> **Atenção ao `rewrites`:** o fallback de SPA usa
+> `"source": "/((?!api/).*)"` — o `catch-all` precisa ignorar `/api/*`. Com um
+> `/(.*)` puro, o deploy serviu o `index.csr.html` estático para `/api/*`
+> (`POST /api/analyze` → `405` com HTML, `GET /api/health` → HTML) e nenhuma
+> função foi executada, o que também explica a ausência de logs na Vercel.
+>
+> Depois de cada deploy, confirme em 10 segundos:
+>
+> ```bash
+> curl -s https://<seu-dominio>/api/health   # esperado: {"ok":true}
+> ```
+>
+> Se voltar HTML, o rewrite em produção ainda é o antigo (o deploy não pegou a
+> mudança). Se voltar `404`, a causa **não** é o rewrite: as funções de `api/`
+> não estão sendo construídas (preset de framework / Root Directory do
+> projeto).
+
 ## Tests
 
 ```bash
