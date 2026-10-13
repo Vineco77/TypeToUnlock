@@ -67,6 +67,16 @@ usado somente pelo ambiente de desenvolvimento local.
 > não estão sendo construídas (preset de framework / Root Directory do
 > projeto).
 
+> **`api/tsconfig.json` é obrigatório:** a Vercel resolve o `tsconfig.json` a
+> partir do diretório do entrypoint, então sem esse arquivo ela usa o da raiz
+> (o do Angular, com `"module": "ES2022"`) e emite **ESM** em `api/*.js`. Como
+> o `package.json` não tem `"type": "module"`, o runtime carrega esses arquivos
+> como CommonJS e quebra em **toda** rota:
+> `SyntaxError: Cannot use import statement outside a module` →
+> `500 FUNCTION_INVOCATION_FAILED` em `/api/health`, `/api/analyze` e
+> `/api/dictionary`. O arquivo fixa `"module": "commonjs"` para os arquivos de
+> `api/` e `server/`; não remova.
+
 ## Tests
 
 ```bash

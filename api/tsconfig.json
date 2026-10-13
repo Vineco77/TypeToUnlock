@@ -1,0 +1,21 @@
+{
+  /*
+   * Vercel compiles everything under `api/` (and the relative imports it can
+   * reach, like `server/`) with the TypeScript config found by walking up from
+   * the *entrypoint* directory. Without this file it picks the root
+   * `tsconfig.json`, which is Angular's (`"module": "ES2022"`).
+   *
+   * That emits ESM (`import`/`export`) into `api/index.js`, but the project has
+   * no `"type": "module"`, so the Node.js runtime loads those files as CommonJS
+   * and crashes on every request:
+   *   SyntaxError: Cannot use import statement outside a module
+   *   → FUNCTION_INVOCATION_FAILED (500) on /api/health, /api/analyze, ...
+   *
+   * CommonJS output is what the Vercel Node.js runtime expects here.
+   */
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node"
+  }
+}
